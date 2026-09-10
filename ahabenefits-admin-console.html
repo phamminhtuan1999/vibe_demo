@@ -1,0 +1,967 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>AhaBenefits Admin Console</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+</head><body>
+<style>
+:root{
+  --bg:#F4F6F9;
+  --card:#FFFFFF;
+  --card-2:#F9FAFB;
+  --line:#E5E7EB;
+  --line-2:#EEF0F3;
+  --ink:#1F2937;
+  --ink-2:#4B5563;
+  --ink-3:#8A93A0;
+  --blue:#2563EB;
+  --blue-hover:#1D4ED8;
+  --link:#1B6CF2;
+  --green:#15803D; --green-bg:#DCFCE7;
+  --amber:#B45309; --amber-bg:#FEF3C7;
+  --red:#DC2626;   --red-bg:#FEE2E2;
+  --gray:#6B7280;  --gray-bg:#F3F4F6;
+  --purple:#6D28D9; --purple-bg:#EDE9FE;
+  --shadow-card:0 1px 2px rgba(16,24,40,.05);
+  --shadow-pop:0 10px 28px -10px rgba(16,24,40,.28), 0 2px 6px rgba(16,24,40,.06);
+  --sans:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1216; --card:#171B21; --card-2:#1D222A;
+    --line:#2B3139; --line-2:#242A31;
+    --ink:#E7EAEE; --ink-2:#AEB6C0; --ink-3:#7B838F;
+    --blue:#5B8DEF; --blue-hover:#7BA4F5; --link:#7BA4F5;
+    --green:#5CC98D; --green-bg:#123322;
+    --amber:#E0AE45; --amber-bg:#33280B;
+    --red:#EF7F76;   --red-bg:#361715;
+    --gray:#98A1AC;  --gray-bg:#242A31;
+    --purple:#B09BF0; --purple-bg:#241C3D;
+    --shadow-card:0 1px 2px rgba(0,0,0,.5);
+    --shadow-pop:0 12px 30px -10px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1216; --card:#171B21; --card-2:#1D222A;
+  --line:#2B3139; --line-2:#242A31;
+  --ink:#E7EAEE; --ink-2:#AEB6C0; --ink-3:#7B838F;
+  --blue:#5B8DEF; --blue-hover:#7BA4F5; --link:#7BA4F5;
+  --green:#5CC98D; --green-bg:#123322;
+  --amber:#E0AE45; --amber-bg:#33280B;
+  --red:#EF7F76;   --red-bg:#361715;
+  --gray:#98A1AC;  --gray-bg:#242A31;
+  --purple:#B09BF0; --purple-bg:#241C3D;
+  --shadow-card:0 1px 2px rgba(0,0,0,.5);
+  --shadow-pop:0 12px 30px -10px rgba(0,0,0,.8), 0 2px 6px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+svg{flex:none}
+
+/* ---------- app header ---------- */
+.appbar{
+  background:var(--card);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:11px 20px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:30;
+}
+.back{
+  width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card);
+  display:grid;place-items:center;cursor:pointer;color:var(--ink-2);
+}
+.back:hover{background:var(--card-2)}
+.appbar h1{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.appbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.searchbox{
+  display:flex;align-items:center;gap:8px;background:var(--card);
+  border:1px solid var(--line);border-radius:8px;padding:7px 11px;min-width:280px;
+}
+.searchbox input{border:0;background:none;outline:none;flex:1;font-size:13px;min-width:0}
+.searchbox input::placeholder{color:var(--ink-3)}
+.pickers{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px}
+.pickers select{border:0;background:none;outline:none;font-size:13px;cursor:pointer}
+.clock{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.bell{position:relative;display:grid;place-items:center;width:32px;height:32px;border-radius:8px;border:0;background:none;cursor:pointer;color:var(--ink-2)}
+.bell:hover{background:var(--card-2)}
+.bell b{position:absolute;top:0;right:0;background:var(--red);color:#fff;font-size:9.5px;font-weight:600;border-radius:9px;padding:1px 4px;line-height:1.3}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600}
+
+/* ---------- page frame ---------- */
+.crumbs{display:flex;align-items:center;gap:8px;padding:14px 22px 0;font-size:13px;color:var(--ink-3);flex-wrap:wrap}
+.crumbs a{color:var(--link);text-decoration:none;cursor:pointer}
+.crumbs a:hover{text-decoration:underline}
+.page{padding:14px 22px 60px;display:flex;flex-direction:column;gap:18px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:visible}
+.card-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line-2)}
+.card-head h2{margin:0;font-size:15.5px;font-weight:600}
+.card-head .sub{font-size:12.5px;color:var(--ink-3)}
+.card-head .right{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.card-pad{padding:16px 18px}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap;
+}
+.btn:hover{background:var(--card-2)}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn-primary:hover{background:var(--blue-hover);border-color:var(--blue-hover)}
+.btn-ghost{border-color:transparent;background:none;color:var(--link);font-weight:600}
+.btn-ghost:hover{background:var(--card-2)}
+.btn-sm{padding:6px 11px;font-size:13px}
+.rowacts{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- table ---------- */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{
+  text-align:left;font-weight:600;font-size:12.5px;color:var(--ink-2);
+  background:var(--card-2);padding:11px 16px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+thead th .srt{color:var(--ink-3);margin-left:4px}
+tbody td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tbody tr:hover td{background:var(--card-2)}
+tbody tr:last-child td{border-bottom:0}
+.sku{color:var(--link);text-decoration:none;font-weight:500;cursor:pointer}
+.sku:hover{text-decoration:underline}
+.strong{font-weight:600}
+.sub{display:block;font-size:12px;color:var(--ink-3);margin-top:1px}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.thumb{
+  width:34px;height:34px;border-radius:7px;background:var(--gray-bg);
+  display:grid;place-items:center;color:var(--ink-3);
+}
+.userlink{color:var(--link);text-decoration:none}
+.userlink:hover{text-decoration:underline}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.pill.green{background:var(--green-bg);color:var(--green)}
+.pill.amber{background:var(--amber-bg);color:var(--amber)}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.gray{background:var(--gray-bg);color:var(--gray)}
+.pill.purple{background:var(--purple-bg);color:var(--purple)}
+
+.mult-val{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.mult-bar{height:5px;border-radius:3px;background:var(--gray-bg);overflow:hidden;width:88px;margin-top:5px}
+.mult-bar i{display:block;height:100%;background:var(--blue);border-radius:3px}
+
+/* ---------- kebab menu ---------- */
+.kebab{
+  width:30px;height:30px;border-radius:7px;border:0;background:none;cursor:pointer;
+  display:grid;place-items:center;color:var(--ink-2);
+}
+.kebab:hover{background:var(--gray-bg)}
+.menu{
+  position:absolute;z-index:60;min-width:186px;
+  background:var(--card);border:1px solid var(--line);border-radius:9px;
+  box-shadow:var(--shadow-pop);padding:6px;display:flex;flex-direction:column;
+}
+.menu button{
+  border:0;background:none;text-align:left;padding:8px 11px;border-radius:6px;
+  cursor:pointer;font-size:13.5px;
+}
+.menu button:hover{background:var(--card-2)}
+.menu button.danger{color:var(--red)}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line-2)}
+.toolbar .searchbox{min-width:300px;background:var(--card)}
+.toolbar .right{margin-left:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 14px}
+.chip{
+  border:1px solid var(--line);background:var(--card);border-radius:99px;
+  padding:5px 13px;font-size:12.5px;cursor:pointer;color:var(--ink-2);
+}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+
+/* ---------- pagination ---------- */
+.pager{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-2)}
+.pager .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.pg{width:28px;height:28px;border-radius:6px;border:1px solid transparent;background:none;cursor:pointer;font-size:13px}
+.pg:hover{background:var(--card-2)}
+.pg[aria-current="true"]{background:var(--blue);color:#fff;font-weight:600}
+.pager select{border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:var(--card)}
+
+/* ---------- modal ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(17,24,39,.55);
+  display:grid;place-items:center;padding:20px;z-index:80;
+}
+.modal{
+  background:var(--card);border-radius:12px;width:min(560px,100%);
+  box-shadow:var(--shadow-pop);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;
+}
+.modal-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+.modal-head h3{margin:0;font-size:16px;font-weight:600}
+.x{margin-left:auto;border:0;background:none;cursor:pointer;color:var(--ink-3);font-size:19px;line-height:1;padding:2px 6px;border-radius:6px}
+.x:hover{background:var(--card-2)}
+.modal-body{padding:18px 20px;overflow:auto}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line-2)}
+
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin:12px 0 16px}
+.tabs button{
+  border:0;background:none;cursor:pointer;padding:9px 2px;font-size:13.5px;
+  color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.tabs button[aria-selected="true"]{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+.dropzone{
+  border:1.5px dashed var(--line);border-radius:10px;background:var(--card-2);
+  padding:26px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px;
+}
+.dropzone.hot{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 8%,var(--card-2))}
+.dropzone .cloud{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--blue) 14%,transparent);display:grid;place-items:center;color:var(--blue)}
+.dropzone p{margin:0;font-size:13.5px;color:var(--ink-2)}
+.dropzone a{color:var(--link);cursor:pointer;text-decoration:none;font-weight:600}
+.hint{font-size:12px;color:var(--ink-3);margin-top:8px}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.field label{font-size:13px;font-weight:500}
+.field label em{color:var(--red);font-style:normal}
+.field input,.field select,.field textarea{
+  border:1px solid var(--line);border-radius:8px;background:var(--card);padding:9px 11px;font-size:13.5px;width:100%;
+}
+.field input[readonly]{background:var(--card-2);color:var(--ink-2)}
+.field .help{font-size:12px;color:var(--ink-3)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.sliderow{display:flex;align-items:center;gap:12px}
+.sliderow input[type=range]{flex:1;accent-color:var(--blue);padding:0}
+.sliderow output{font-weight:700;font-size:17px;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+.callout{
+  background:var(--card-2);border:1px solid var(--line-2);border-radius:9px;
+  padding:11px 13px;font-size:12.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px;
+}
+.callout b{color:var(--ink)}
+.parse{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.parse div{border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;background:var(--card-2)}
+.parse .k{font-size:11.5px;color:var(--ink-3);display:block}
+.parse .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.parse .v.g{color:var(--green)} .parse .v.a{color:var(--amber)} .parse .v.r{color:var(--red)}
+
+.logrow{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.logrow:last-child{border-bottom:0}
+.logrow .t{font-weight:600;font-size:13.5px}
+.logrow .m{font-size:12.5px;color:var(--ink-3)}
+.logrow .r{margin-left:auto;text-align:right}
+
+/* ---------- SKU detail ---------- */
+.detail-head{align-items:center;padding:16px 18px}
+.detail-head .art{
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--ink-3);background:var(--card-2);flex:none;
+}
+.detail-head .titleblock{min-width:180px}
+.detail-head h2{font-size:18px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.detail-head .right{gap:10px}
+
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px 24px}
+.dl .k{font-size:12px;color:var(--ink-3);display:block}
+.dl .v{font-size:13.5px;margin-top:2px}
+.sect-note{font-size:12.5px;color:var(--ink-3)}
+
+@media (max-width:900px){
+  .grid2{grid-template-columns:1fr}
+  .parse{grid-template-columns:1fr 1fr}
+  .searchbox{min-width:180px}
+  .appbar,.page,.crumbs{padding-left:14px;padding-right:14px}
+}
+</style>
+
+<header class="appbar">
+  <button class="back" id="btn-back" aria-label="Back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <h1>AhaBenefits</h1>
+  <div class="appbar-right">
+    <div class="searchbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>
+      <input id="global-q" type="search" placeholder="Search driver ID, SKU or gift name">
+    </div>
+    <div class="pickers">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <select aria-label="City">
+        <option>Ho Chi Minh City</option><option>Hanoi</option><option>Da Nang</option><option>Nationwide</option>
+      </select>
+    </div>
+    <div class="clock">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+      <span id="clock-t">18:51</span> ICT
+    </div>
+    <button class="bell" aria-label="Notifications">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 10-12 0c0 6-3 7-3 7h18s-3-1-3-7"/><path d="M13.7 20a2 2 0 01-3.4 0"/></svg>
+      <b>7</b>
+    </button>
+    <div class="avatar" title="nantt@ahamove.com">NT</div>
+  </div>
+</header>
+
+<nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+
+<!-- ================= LIST VIEW ================= -->
+<div class="page" id="view-list">
+
+  <!-- ============ 1. SHIFT MULTIPLIER ============ -->
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Shift point multiplier</h2>
+        <span class="sub">One multiplier applies to every shift. Points earned on a completed order = the order's base points x this multiplier.</span>
+      </div>
+      <div class="right">
+        <button class="btn btn-sm" id="mult-edit">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
+          Edit
+        </button>
+        <button class="btn btn-sm" id="mult-history">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7.5V12l3 1.8"/></svg>
+          Change history
+        </button>
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:26%">Multiplier</th>
+            <th style="width:30%">Applies to</th>
+            <th style="width:24%">Updated by</th>
+            <th>Effective from</th>
+          </tr>
+        </thead>
+        <tbody id="shift-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 2. GIFT INVENTORY ============ -->
+  <section class="card">
+    <div class="toolbar">
+      <div class="searchbox">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>
+        <input id="gift-q" type="search" placeholder="Search by SKU, gift name or source">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M4 6v12M7.5 6v12M11 6v12M14 6v12M17.5 6v12M20 6v12"/></svg>
+      </div>
+      <div class="right">
+        <button class="btn btn-ghost btn-sm" id="btn-filters">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>
+          Filters
+        </button>
+        <button class="btn" id="btn-open-import">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 19h16"/></svg>
+          Import Code
+        </button>
+        <button class="btn btn-primary" id="btn-add-gift">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add Gift
+        </button>
+      </div>
+    </div>
+    <div class="chips" id="gift-chips">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="in" aria-pressed="false">In stock</button>
+      <button class="chip" data-f="low" aria-pressed="false">Low stock</button>
+      <button class="chip" data-f="out" aria-pressed="false">Out of stock</button>
+      <button class="chip" data-f="err" aria-pressed="false">Needs review</button>
+    </div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>SKU <span class="srt">&#8595;</span></th>
+            <th>Gift name</th>
+            <th>Expiry <span class="srt">&#8595;</span></th>
+            <th class="num">Available</th>
+            <th class="num">Point price</th>
+            <th>Source</th>
+            <th>Updated by</th>
+            <th>Stock</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="gift-rows"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <span id="gift-count">Showing 1 &ndash; 8 of 8 items</span>
+      <div class="right">
+        <span>Rows per page</span>
+        <select id="rows-per-page"><option>20</option><option>50</option><option>100</option></select>
+        <button class="pg" aria-label="Previous page">&lsaquo;</button>
+        <button class="pg" aria-current="true">1</button>
+        <button class="pg">2</button>
+        <button class="pg" aria-label="Next page">&rsaquo;</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= DETAIL VIEW ================= -->
+<div class="page" id="view-detail" hidden></div>
+
+<div id="modal-root"></div>
+<div id="menu-root"></div>
+
+<script>
+(function(){
+  "use strict";
+  var num = function(n){ return n.toLocaleString("en-US"); };
+  var fx  = function(n){ return n.toFixed(2); };
+  var TODAY = "09/09/2026";
+  var ME = "nantt";
+
+  /* clock */
+  (function tick(){
+    var d = new Date();
+    var el = document.getElementById("clock-t");
+    if(el) el.textContent = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    setTimeout(tick, 20000);
+  })();
+  function nowHm(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+
+  /* ---------- toast ---------- */
+  var toastT;
+  function toast(msg){
+    var old = document.querySelector(".toast");
+    if(old) old.remove();
+    var el = document.createElement("div");
+    el.className = "toast"; el.textContent = msg; el.setAttribute("role","status");
+    el.style.cssText = "position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:9px;font-size:13.5px;box-shadow:var(--shadow-pop);z-index:90";
+    document.body.appendChild(el);
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ el.remove(); }, 3200);
+  }
+
+  /* ---------- popup menu ---------- */
+  var menuRoot = document.getElementById("menu-root");
+  function closeMenu(){ menuRoot.innerHTML = ""; }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest(".menu") && !e.target.closest(".kebab")) closeMenu();
+  });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closeMenu(); closeModal(); } });
+
+  function openMenu(anchor, items){
+    closeMenu();
+    var m = document.createElement("div");
+    m.className = "menu"; m.setAttribute("role","menu");
+    items.forEach(function(it){
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = it.label;
+      if(it.danger) b.className = "danger";
+      b.addEventListener("click", function(){ closeMenu(); it.fn(); });
+      m.appendChild(b);
+    });
+    menuRoot.appendChild(m);
+    var r = anchor.getBoundingClientRect();
+    var top = r.bottom + window.scrollY + 6;
+    var left = r.right + window.scrollX - m.offsetWidth;
+    if(top + m.offsetHeight > window.scrollY + window.innerHeight){
+      top = r.top + window.scrollY - m.offsetHeight - 6;
+    }
+    m.style.top = Math.max(8, top) + "px";
+    m.style.left = Math.max(8, left) + "px";
+    m.querySelector("button").focus();
+  }
+
+  /* ---------- modal ---------- */
+  var modalRoot = document.getElementById("modal-root");
+  function closeModal(){ modalRoot.innerHTML = ""; }
+  function openModal(title, bodyHtml, footHtml){
+    modalRoot.innerHTML =
+      '<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="' + title + '">' +
+      '<div class="modal-head"><h3>' + title + '</h3><button class="x" aria-label="Close">&times;</button></div>' +
+      '<div class="modal-body">' + bodyHtml + '</div>' +
+      (footHtml ? '<div class="modal-foot">' + footHtml + '</div>' : '') +
+      '</div></div>';
+    modalRoot.querySelector(".x").addEventListener("click", closeModal);
+    modalRoot.querySelector(".scrim").addEventListener("mousedown", function(e){
+      if(e.target === this) closeModal();
+    });
+    return modalRoot;
+  }
+
+  /* ================= SHIFT MULTIPLIER (single, global) ================= */
+  var MULT = {value:1.50, by:"nantt", at:"04/09/2026 09:03", from:"04/09/2026 00:00"};
+  var HISTORY = [
+    {d:"1.30 &rarr; 1.50", why:"Evening rain surge, all shifts", by:"nantt",  at:"04/09/2026 09:03"},
+    {d:"1.20 &rarr; 1.30", why:"National Day peak week",        by:"nantt",  at:"28/08/2026 15:40"},
+    {d:"1.00 &rarr; 1.20", why:"Driver supply below target",    by:"hieult", at:"12/08/2026 14:20"},
+    {d:"Set to 1.00",      why:"Program launch baseline",       by:"hieult", at:"05/08/2026 09:05"}
+  ];
+
+  function renderShifts(){
+    var tb = document.getElementById("shift-rows");
+    tb.innerHTML =
+      '<tr><td><span class="mult-val">' + fx(MULT.value) + '&times;</span>' +
+        '<div class="mult-bar"><i style="width:' + Math.min(100, MULT.value / 3 * 100) + '%"></i></div></td>' +
+      '<td><span class="strong">All shifts</span>' +
+        '<span class="sub">Every completed order, 24/7, all cities</span></td>' +
+      '<td><a class="userlink" href="#">' + MULT.by + '</a><span class="sub">' + MULT.at + '</span></td>' +
+      '<td>' + MULT.from + '</td></tr>';
+  }
+
+  function editShift(){
+    openModal("Edit shift point multiplier",
+      '<div class="field"><label for="m-scope">Applies to</label>' +
+        '<input id="m-scope" value="All shifts — every completed order, 24/7" readonly></div>' +
+      '<div class="field"><label for="m-val">Multiplier <em>*</em></label>' +
+        '<input id="m-val" type="number" inputmode="decimal" min="0.5" max="3" step="0.01" value="' + fx(MULT.value) + '">' +
+        '<span class="help">Decimal value between 0.50 and 3.00, up to two decimal places. Anything above 2.50 needs Head of Ops approval before it goes live.</span></div>' +
+      '<div class="field"><label for="m-note">Reason for change</label>' +
+        '<input id="m-note" placeholder="e.g. lift driver supply during rain hours"></div>' +
+      '<div class="callout"><b>Example:</b> <span id="m-eg"></span>' +
+      '<span>Orders completed before you save keep the old multiplier.</span></div>',
+      '<button class="btn" data-act="cancel">Cancel</button><button class="btn btn-primary" data-act="save">Save changes</button>'
+    );
+    var val = document.getElementById("m-val"),
+        eg  = document.getElementById("m-eg");
+    function sync(){
+      var v = parseFloat(val.value);
+      if(isNaN(v)){ eg.textContent = "enter a multiplier to preview the result"; return; }
+      eg.textContent = "a 20-point order becomes " + Math.round(20 * v) + " points" +
+        (v > 2.5 ? "  ·  above the 2.50 cap, approval required" : "");
+    }
+    val.addEventListener("input", sync); sync();
+    modalRoot.querySelector('[data-act="cancel"]').addEventListener("click", closeModal);
+    modalRoot.querySelector('[data-act="save"]').addEventListener("click", function(){
+      var v = parseFloat(val.value);
+      if(isNaN(v) || v < 0.5 || v > 3){
+        toast("Enter a multiplier between 0.50 and 3.00.");
+        val.focus(); return;
+      }
+      var old = MULT.value;
+      var why = (document.getElementById("m-note").value || "").trim();
+      MULT.value = Math.round(v * 100) / 100;
+      MULT.by = ME; MULT.at = TODAY + " " + nowHm(); MULT.from = MULT.at;
+      HISTORY.unshift({d:fx(old) + " &rarr; " + fx(MULT.value), why:why || "No reason given", by:ME, at:MULT.at});
+      renderShifts(); closeModal();
+      toast("Saved " + fx(MULT.value) + "x for all shifts.");
+    });
+  }
+
+  function openHistory(){
+    var body = HISTORY.map(function(h){
+      return '<div class="logrow"><div><div class="t">' + h.d + '</div>' +
+        '<div class="m">' + h.why + '</div></div>' +
+        '<div class="r"><div class="t" style="font-weight:500">' + h.by + '</div>' +
+        '<div class="m">' + h.at + '</div></div></div>';
+    }).join("");
+    openModal("Multiplier change history", body,
+      '<button class="btn" data-act="close">Close</button>');
+    modalRoot.querySelector('[data-act="close"]').addEventListener("click", closeModal);
+  }
+  document.getElementById("mult-history").addEventListener("click", openHistory);
+  document.getElementById("mult-edit").addEventListener("click", editShift);
+
+  renderShifts();
+
+  /* ================= GIFT INVENTORY ================= */
+  var GIFTS = [
+    {sku:"GIFT-FUEL-50",  name:"Fuel voucher 50,000d",        cat:"Fuel",     type:"Voucher code", exp:"31/12/2026", qty:1182, price:800,  src:"In-house",      by:"nantt",  at:"04/09/2026 16:42", status:"active",   uom:"code", limit:"2 per driver / week"},
+    {sku:"GIFT-PHONE-20", name:"Mobile top-up 20,000d",       cat:"Telco",    type:"Voucher code", exp:"31/12/2026", qty:2755, price:600,  src:"Aggregator",    by:"hieult", at:"01/09/2026 09:15", status:"active",   uom:"code", limit:"4 per driver / week"},
+    {sku:"GIFT-TIRE-SVC", name:"Free tyre repair (1 use)",    cat:"Vehicle",  type:"Service",      exp:"30/09/2026", qty:96,   price:350,  src:"Merchant pool", by:"nantt",  at:"28/08/2026 11:03", status:"active",   uom:"voucher", limit:"1 per driver / month"},
+    {sku:"GIFT-RAIN-KIT", name:"Ahamove raincoat",            cat:"Gear",     type:"Physical",     exp:"—",     qty:0,    price:1500, src:"In-house",      by:"trangnt",at:"20/08/2026 10:30", status:"inactive", uom:"unit", limit:"1 per driver / quarter"},
+    {sku:"GIFT-COFFEE-1", name:"Highlands coffee, size M",    cat:"Food",     type:"Voucher code", exp:"31/10/2026", qty:412,  price:450,  src:"Merchant pool", by:"hieult", at:"02/09/2026 14:11", status:"active",   uom:"code", limit:"3 per driver / week"},
+    {sku:"GIFT-OIL-CHG",  name:"Motorbike oil change",        cat:"Vehicle",  type:"Service",      exp:"15/12/2026", qty:38,   price:2200, src:"Merchant pool", by:"nantt",  at:"03/09/2026 08:20", status:"active",   uom:"voucher", limit:"1 per driver / month"},
+    {sku:"GIFT-HELMET-1", name:"Three-quarter helmet",        cat:"Gear",     type:"Physical",     exp:"—",     qty:150,  price:3500, src:"In-house",      by:"trangnt",at:"15/08/2026 09:00", status:"error",    uom:"unit", limit:"1 per driver / year"},
+    {sku:"GIFT-DATA-5GB", name:"5GB data, 30 days",           cat:"Telco",    type:"Voucher code", exp:"31/12/2026", qty:0,    price:900,  src:"Aggregator",    by:"hieult", at:"05/09/2026 17:25", status:"active",   uom:"code", limit:"2 per driver / month"}
+  ];
+  var ST_GIFT = {
+    active:   ["green","Active"],
+    inactive: ["gray","Hidden"],
+    error:    ["red","Needs review"]
+  };
+  function stockOf(g){
+    if(g.qty === 0) return ["red","Out of stock","out"];
+    if(g.qty < 100) return ["amber","Low stock","low"];
+    return ["green","In stock","in"];
+  }
+  var giftQ = "", giftF = "all";
+
+  function renderGifts(){
+    var rows = GIFTS.filter(function(g){
+      var s = stockOf(g)[2];
+      if(giftF === "err" && g.status !== "error") return false;
+      if(giftF !== "all" && giftF !== "err" && s !== giftF) return false;
+      if(giftQ){
+        var q = giftQ.toLowerCase();
+        if(g.sku.toLowerCase().indexOf(q) < 0 && g.name.toLowerCase().indexOf(q) < 0 && g.src.toLowerCase().indexOf(q) < 0) return false;
+      }
+      return true;
+    });
+    var tb = document.getElementById("gift-rows");
+    tb.innerHTML = "";
+    if(!rows.length){
+      tb.innerHTML = '<tr><td colspan="9" style="padding:28px 16px;color:var(--ink-3)">No gift matches these filters. Clear the search or choose &ldquo;All&rdquo;.</td></tr>';
+    }
+    rows.forEach(function(g){
+      var st = ST_GIFT[g.status], sk = stockOf(g);
+      var expSoon = g.exp === "30/09/2026";
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td></td>' +
+        '<td>' + g.name + '</td>' +
+        '<td>' + g.exp + (expSoon ? '<span class="sub" style="color:var(--amber)">21 days left</span>' : '') + '</td>' +
+        '<td class="num">' + num(g.qty) + '</td>' +
+        '<td class="num">' + num(g.price) + '</td>' +
+        '<td>' + g.src + '</td>' +
+        '<td><a class="userlink" href="#">' + g.by + '</a><span class="sub">' + g.at + '</span></td>' +
+        '<td><span class="pill ' + sk[0] + '"><i></i>' + sk[1] + '</span></td>' +
+        '<td><span class="pill ' + st[0] + '"><i></i>' + st[1] + '</span></td>';
+
+      var skuCell = tr.firstElementChild;
+      var a = document.createElement("a");
+      a.className = "sku"; a.href = "#"; a.textContent = g.sku;
+      a.addEventListener("click", function(ev){ ev.preventDefault(); openDetail(g); });
+      skuCell.appendChild(a);
+
+      tb.appendChild(tr);
+    });
+    document.getElementById("gift-count").innerHTML =
+      "Showing 1 &ndash; " + rows.length + " of " + GIFTS.length + " items";
+  }
+
+  function touch(g){ g.by = ME; g.at = TODAY + " " + nowHm(); renderGifts(); }
+
+  document.getElementById("gift-q").addEventListener("input", function(e){
+    giftQ = e.target.value.trim(); renderGifts();
+  });
+  document.getElementById("global-q").addEventListener("input", function(e){
+    giftQ = e.target.value.trim();
+    document.getElementById("gift-q").value = giftQ;
+    if(current) showList();
+    renderGifts();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#gift-chips .chip"), function(c){
+    c.addEventListener("click", function(){
+      giftF = c.dataset.f;
+      Array.prototype.forEach.call(document.querySelectorAll("#gift-chips .chip"), function(x){
+        x.setAttribute("aria-pressed", x === c ? "true" : "false");
+      });
+      renderGifts();
+    });
+  });
+  document.getElementById("btn-filters").addEventListener("click", function(){
+    toast("Advanced filters (source, expiry, point range) — mockup.");
+  });
+  document.getElementById("btn-add-gift").addEventListener("click", function(){
+    openModal("Add a new gift",
+      '<div class="grid2">' +
+      '<div class="field"><label for="ng-name">Gift name <em>*</em></label><input id="ng-name" placeholder="e.g. Fuel voucher 50,000d"></div>' +
+      '<div class="field"><label for="ng-sku">SKU <em>*</em></label><input id="ng-sku" placeholder="GIFT-..."></div>' +
+      '<div class="field"><label for="ng-src">Source <em>*</em></label><select id="ng-src"><option>In-house</option><option>Merchant pool</option><option>Aggregator</option></select></div>' +
+      '<div class="field"><label for="ng-price">Point price <em>*</em></label><input id="ng-price" type="number" placeholder="800"></div>' +
+      '<div class="field"><label for="ng-exp">Expiry</label><input id="ng-exp" placeholder="dd/mm/yyyy"></div>' +
+      '<div class="field"><label for="ng-status">Status</label><select id="ng-status"><option>Active</option><option>Hidden</option></select></div>' +
+      '</div>' +
+      '<div class="callout"><b>After you create it:</b><span>The SKU stays &ldquo;Out of stock&rdquo; until you load its first batch through Import Code.</span></div>',
+      '<button class="btn" data-act="cancel">Cancel</button><button class="btn btn-primary" data-act="save">Create gift</button>');
+    modalRoot.querySelector('[data-act="cancel"]').addEventListener("click", closeModal);
+    modalRoot.querySelector('[data-act="save"]').addEventListener("click", function(){
+      closeModal(); toast("New SKU created (mockup).");
+    });
+  });
+
+  /* ================= SKU DETAIL (details + transactions + activity log) ================= */
+  var TXN = {
+    "GIFT-FUEL-50": [
+      {d:"05/09/2026 14:02", who:"DRV-448120", city:"Ho Chi Minh City", pts:800},
+      {d:"05/09/2026 09:41", who:"DRV-107765", city:"Ho Chi Minh City", pts:800},
+      {d:"03/09/2026 20:18", who:"DRV-512337", city:"Da Nang",          pts:800},
+      {d:"02/09/2026 07:52", who:"DRV-448120", city:"Ho Chi Minh City", pts:750},
+      {d:"01/09/2026 08:05", who:"DRV-330984", city:"Hanoi",            pts:750}
+    ],
+    "_default": [
+      {d:"04/09/2026 12:10", who:"DRV-221004", city:"Da Nang",          pts:600},
+      {d:"03/09/2026 18:44", who:"DRV-108992", city:"Hanoi",            pts:600},
+      {d:"02/09/2026 10:33", who:"DRV-447015", city:"Ho Chi Minh City", pts:600}
+    ]
+  };
+  var ACT = {
+    "GIFT-FUEL-50": [
+      {d:"04/09/2026 16:42", by:"nantt",   what:"Imported 1,200 codes",        det:"Source: In-house &middot; 18 duplicates skipped"},
+      {d:"02/09/2026 09:14", by:"nantt",   what:"Point price changed",         det:"750 &rarr; 800 points"},
+      {d:"28/08/2026 11:03", by:"trangnt", what:"Redemption limit changed",    det:"1 &rarr; 2 per driver / week"},
+      {d:"12/08/2026 14:20", by:"hieult",  what:"Status changed",              det:"Hidden &rarr; Active"},
+      {d:"02/08/2026 08:00", by:"hieult",  what:"SKU created",                 det:"Category: Fuel &middot; Type: Voucher code"}
+    ],
+    "_default": [
+      {d:"05/09/2026 17:25", by:"hieult",  what:"Imported a code batch",       det:"Source: Aggregator"},
+      {d:"20/08/2026 10:30", by:"trangnt", what:"Point price changed",         det:"1,400 &rarr; 1,500 points"},
+      {d:"01/08/2026 09:00", by:"nantt",   what:"SKU created",                 det:"Created from the gift catalog"}
+    ]
+  };
+  var current = null;
+  var listEl = document.getElementById("view-list"),
+      detEl  = document.getElementById("view-detail"),
+      crumbs = document.getElementById("crumbs");
+
+  function setCrumbs(){
+    crumbs.innerHTML = current
+      ? '<a data-go="list">AhaBenefits</a><span>/</span><a data-go="list">Gift Inventory</a><span>/</span><span>' + current.name + '</span>'
+      : '<a href="#">AhaBenefits</a><span>/</span><a href="#">Configuration</a><span>/</span><span>Multipliers &amp; Gift Inventory</span>';
+    Array.prototype.forEach.call(crumbs.querySelectorAll('[data-go="list"]'), function(a){
+      a.addEventListener("click", function(e){ e.preventDefault(); showList(); });
+    });
+  }
+
+  function showList(){
+    current = null;
+    detEl.hidden = true; listEl.hidden = false;
+    detEl.innerHTML = "";
+    setCrumbs();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("btn-back").addEventListener("click", function(){
+    if(current) showList(); else toast("You are already on the top-level configuration page.");
+  });
+
+  function openDetail(g){
+    current = g;
+    listEl.hidden = true; detEl.hidden = false;
+    var st = ST_GIFT[g.status], sk = stockOf(g);
+    var txn = TXN[g.sku] || TXN._default;
+    var act = ACT[g.sku] || ACT._default;
+
+    detEl.innerHTML =
+      /* ---- Details (header + fields in one section) ---- */
+      '<section class="card" id="sec-details">' +
+        '<div class="card-head detail-head">' +
+          '<div class="art"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8S9.5 3.5 7 4.6 8.8 8 12 8s5-2.3 5-3.4S14.5 3.5 12 8z"/></svg></div>' +
+          '<div class="titleblock">' +
+            '<h2>' + g.name + '</h2>' +
+            '<span class="sub">' + g.sku + ' &middot; ' + g.src + '</span>' +
+          '</div>' +
+          '<div class="right">' +
+            '<span class="pill ' + sk[0] + '"><i></i>' + sk[1] + '</span>' +
+            '<span class="pill ' + st[0] + '"><i></i>' + st[1] + '</span>' +
+            '<button class="btn btn-sm" data-d="import">Import Code</button>' +
+            '<button class="btn btn-sm" data-d="edit">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-pad">' +
+          '<div class="dl">' +
+            '<div><span class="k">SKU</span><div class="v">' + g.sku + '</div></div>' +
+            '<div><span class="k">Gift name</span><div class="v">' + g.name + '</div></div>' +
+            '<div><span class="k">Source</span><div class="v">' + g.src + '</div></div>' +
+            '<div><span class="k">Point price</span><div class="v">' + num(g.price) + ' points</div></div>' +
+            '<div><span class="k">Expiry</span><div class="v">' + g.exp + '</div></div>' +
+            '<div><span class="k">Available quantity</span><div class="v">' + num(g.qty) + '</div></div>' +
+            '<div><span class="k">Reserved / pending</span><div class="v">' + num(Math.min(g.qty, 12)) + '</div></div>' +
+            '<div><span class="k">Eligible cities</span><div class="v">Ho Chi Minh City, Hanoi, Da Nang</div></div>' +
+            '<div><span class="k">Last updated by</span><div class="v"><a class="userlink" href="#">' + g.by + '</a> &middot; ' + g.at + '</div></div>' +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+
+      /* ---- Transactions ---- */
+      '<section class="card" id="sec-txn">' +
+        '<div class="card-head"><div><h2>Transactions</h2>' +
+          '<span class="sub">Driver redemptions of this SKU, newest first.</span></div>' +
+          '<div class="right"><button class="btn btn-sm" data-d="export">Export CSV</button></div>' +
+        '</div>' +
+        '<div class="tw"><table><thead><tr>' +
+          '<th style="width:26%">Date</th><th style="width:24%">Driver</th>' +
+          '<th style="width:28%">City</th><th class="num">Points spent</th>' +
+        '</tr></thead><tbody>' +
+          txn.map(function(t){
+            return '<tr><td>' + t.d + '</td>' +
+              '<td><a class="userlink" href="#">' + t.who + '</a></td>' +
+              '<td>' + t.city + '</td>' +
+              '<td class="num">' + num(t.pts) + '</td></tr>';
+          }).join("") +
+        '</tbody></table></div>' +
+        '<div class="pager"><span>Showing ' + txn.length + ' of ' + txn.length + ' transactions</span>' +
+          '<div class="right"><button class="pg" aria-label="Previous page">&lsaquo;</button>' +
+          '<button class="pg" aria-current="true">1</button>' +
+          '<button class="pg" aria-label="Next page">&rsaquo;</button></div></div>' +
+      '</section>' +
+
+      /* ---- Activity log ---- */
+      '<section class="card" id="sec-act">' +
+        '<div class="card-head"><div><h2>Activity Log</h2>' +
+          '<span class="sub">Configuration changes made to this SKU.</span></div></div>' +
+        '<div class="card-pad">' +
+          act.map(function(a){
+            return '<div class="logrow"><div><div class="t">' + a.what + '</div>' +
+              '<div class="m">' + a.det + '</div></div>' +
+              '<div class="r"><div class="t" style="font-weight:500">' + a.by + '</div>' +
+              '<div class="m">' + a.d + '</div></div></div>';
+          }).join("") +
+        '</div>' +
+      '</section>';
+
+    detEl.querySelector('[data-d="edit"]').addEventListener("click", function(){
+      toast("Edit form for " + g.sku + " (mockup).");
+    });
+    detEl.querySelector('[data-d="import"]').addEventListener("click", function(){
+      openImport(g.sku);
+    });
+    detEl.querySelector('[data-d="export"]').addEventListener("click", function(){
+      toast("Transaction export queued (mockup).");
+    });
+
+    setCrumbs();
+    window.scrollTo(0, 0);
+  }
+
+  renderGifts();
+  setCrumbs();
+
+  /* ---------- import modal ---------- */
+  var BATCHES = [
+    {sku:"GIFT-FUEL-50",  n:1200, by:"nantt",  at:"04/09/2026 16:42", note:"In-house &middot; 18 duplicates skipped", ok:true},
+    {sku:"GIFT-PHONE-20", n:3000, by:"hieult", at:"01/09/2026 09:15", note:"Aggregator &middot; expiry 31/12/2026", ok:true},
+    {sku:"GIFT-TIRE-SVC", n:0,    by:"nantt",  at:"28/08/2026 11:03", note:"Merchant pool &middot; 42 rows had a malformed expiry date", ok:false}
+  ];
+  var SAMPLE = [
+    "code,expiry",
+    "AHFUEL-9K2M-0011,31/12/2026",
+    "AHFUEL-9K2M-0012,31/12/2026",
+    "AHFUEL-9K2M-0013,31/12/2026",
+    "AHFUEL-8J2K-9021,31/12/2026",
+    "AHFUEL-9K2M-0014,15/09/2026",
+    "AHFUEL-9K2M-0015,31/12/2026",
+    "AHFUEL-9K2M-0016,31-12-2026",
+    "AHFUEL-9K2M-0017,31/12/2026"
+  ].join("\n");
+  var EXISTING = {"AHFUEL-8J2K-9021":1};
+  var pending = null;
+
+  function parseCsv(text){
+    var lines = text.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(Boolean);
+    if(lines.length && /code/i.test(lines[0]) && /expir/i.test(lines[0])) lines.shift();
+    var seen = {}, r = {valid:0, dup:0, exp:0, bad:0, total:lines.length};
+    lines.forEach(function(l){
+      var p = l.split(",");
+      var code = (p[0] || "").trim().toUpperCase();
+      var d = (p[1] || "").trim();
+      if(!code || !/^\d{2}\/\d{2}\/\d{4}$/.test(d)){ r.bad++; return; }
+      if(seen[code] || EXISTING[code]){ r.dup++; return; }
+      seen[code] = 1;
+      var q = d.split("/");
+      if(new Date(+q[2], +q[1]-1, +q[0]) < new Date(2026, 9, 1)){ r.exp++; return; }
+      r.valid++;
+    });
+    return r;
+  }
+
+  function openImport(presetSku){
+    var opts = GIFTS.map(function(g){
+      return '<option value="' + g.sku + '"' + (g.sku === presetSku ? " selected" : "") + '>' + g.sku + ' &middot; ' + g.name + '</option>';
+    }).join("");
+    openModal("Import Code",
+      '<button class="btn btn-ghost btn-sm" id="dl-tpl" style="padding-left:0">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 19h16"/></svg>' +
+      'Download template (.csv)</button>' +
+      '<div class="tabs" role="tablist">' +
+        '<button role="tab" aria-selected="true" data-tab="imp">Import Code</button>' +
+        '<button role="tab" aria-selected="false" data-tab="log">Import history</button>' +
+      '</div>' +
+      '<div data-pane="imp">' +
+        '<div class="grid2">' +
+          '<div class="field"><label for="imp-sku">Import into SKU <em>*</em></label><select id="imp-sku">' + opts + '</select></div>' +
+          '<div class="field"><label for="imp-src">Code source</label><select id="imp-src"><option>In-house (Ahamove)</option><option>Merchant pool</option><option>Aggregator</option></select></div>' +
+        '</div>' +
+        '<div class="dropzone" id="dz">' +
+          '<div class="cloud"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 16V8"/><path d="M8.5 11.5L12 8l3.5 3.5"/><path d="M20 16.5A3.5 3.5 0 0017.5 10h-.7A6 6 0 105 15.9"/></svg></div>' +
+          '<p>Drop a file here or <a id="browse">choose a file</a></p>' +
+          '<p class="hint" style="margin:0">One .csv file, up to 500MB &mdash; columns <b>code</b>, <b>expiry (dd/mm/yyyy)</b></p>' +
+          '<input id="file" type="file" accept=".csv,text/csv" hidden>' +
+        '</div>' +
+        '<p class="hint" id="fname"></p>' +
+        '<div class="parse" id="parse" hidden></div>' +
+        '<div class="callout" style="margin-top:14px"><b>Import rules:</b>' +
+        '<span>A code that already exists in stock is skipped, never overwritten.</span>' +
+        '<span>Codes expiring before 01/10/2026 are not added to the catalog.</span></div>' +
+      '</div>' +
+      '<div data-pane="log" hidden>' +
+        BATCHES.map(function(b){
+          return '<div class="logrow"><div><div class="t">' + b.sku +
+            ' <span class="pill ' + (b.ok ? "green" : "red") + '" style="margin-left:6px"><i></i>' +
+            (b.ok ? num(b.n) + " codes" : "Failed") + '</span></div>' +
+            '<div class="m">' + b.note + '</div></div>' +
+            '<div class="r"><div class="t" style="font-weight:500">' + b.by + '</div>' +
+            '<div class="m">' + b.at + '</div></div></div>';
+        }).join("") +
+      '</div>',
+      '<button class="btn" data-act="cancel">Cancel</button><button class="btn btn-primary" data-act="import">Import to stock</button>'
+    );
+
+    var panes = modalRoot.querySelectorAll("[data-pane]");
+    Array.prototype.forEach.call(modalRoot.querySelectorAll('[role="tab"]'), function(t){
+      t.addEventListener("click", function(){
+        Array.prototype.forEach.call(modalRoot.querySelectorAll('[role="tab"]'), function(x){
+          x.setAttribute("aria-selected", x === t ? "true" : "false");
+        });
+        Array.prototype.forEach.call(panes, function(p){ p.hidden = (p.dataset.pane !== t.dataset.tab); });
+      });
+    });
+
+    var dz = document.getElementById("dz"),
+        file = document.getElementById("file"),
+        parseBox = document.getElementById("parse"),
+        fname = document.getElementById("fname");
+    pending = null;
+
+    function show(r, label){
+      pending = r;
+      fname.innerHTML = "Read <b>" + label + "</b> &mdash; " + r.total + " rows.";
+      parseBox.hidden = false;
+      parseBox.innerHTML =
+        '<div><span class="k">Valid</span><span class="v g">' + r.valid + '</span></div>' +
+        '<div><span class="k">Duplicate</span><span class="v a">' + r.dup + '</span></div>' +
+        '<div><span class="k">Expires too soon</span><span class="v a">' + r.exp + '</span></div>' +
+        '<div><span class="k">Malformed</span><span class="v r">' + r.bad + '</span></div>';
+    }
+    function readFile(f){
+      if(!f) return;
+      var fr = new FileReader();
+      fr.onload = function(){ show(parseCsv(String(fr.result)), f.name); };
+      fr.readAsText(f);
+    }
+    document.getElementById("browse").addEventListener("click", function(){ file.click(); });
+    dz.addEventListener("click", function(e){ if(e.target.id !== "browse") file.click(); });
+    file.addEventListener("change", function(){ readFile(file.files[0]); });
+    ["dragenter","dragover"].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add("hot"); });
+    });
+    ["dragleave","drop"].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove("hot"); });
+    });
+    dz.addEventListener("drop", function(e){
+      if(e.dataTransfer.files && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+    });
+    document.getElementById("dl-tpl").addEventListener("click", function(){
+      show(parseCsv(SAMPLE), "gift-code-template.csv (sample data)");
+      toast("Loaded the sample file so you can preview the validation result.");
+    });
+
+    modalRoot.querySelector('[data-act="cancel"]').addEventListener("click", closeModal);
+    modalRoot.querySelector('[data-act="import"]').addEventListener("click", function(){
+      if(!pending){ toast("Choose a .csv file before importing."); return; }
+      if(pending.valid === 0){ toast("No valid codes. Check the dd/mm/yyyy format and the expiry dates."); return; }
+      var skuId = document.getElementById("imp-sku").value;
+      var src = document.getElementById("imp-src").value;
+      var g = GIFTS.filter(function(x){ return x.sku === skuId; })[0];
+      if(g){ g.qty += pending.valid; if(g.status === "inactive") g.status = "active"; touch(g); }
+      BATCHES.unshift({sku:skuId, n:pending.valid, by:ME, at:TODAY + " " + nowHm(), ok:true,
+        note:src + " &middot; skipped " + pending.dup + " duplicate, " + pending.exp + " expiring, " + pending.bad + " malformed"});
+      var wasOpen = current;
+      closeModal();
+      toast("Imported " + pending.valid + " codes into " + skuId + ".");
+      if(wasOpen && wasOpen.sku === skuId) openDetail(wasOpen);
+    });
+  }
+  document.getElementById("btn-open-import").addEventListener("click", function(){ openImport(null); });
+})();
+</script>
+
+</body></html>

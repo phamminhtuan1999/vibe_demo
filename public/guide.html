@@ -1,0 +1,284 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AhaBenefits · Guide & system design</title><style>*{box-sizing:border-box}html{scroll-behavior:smooth}body{font:15px/1.8 system-ui,sans-serif;color:#1f2937;background:#f4f6f9;margin:0}header{background:white;border-bottom:1px solid #e5e7eb;padding:16px 24px;position:sticky;top:0;z-index:2}header strong{font-size:19px}nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:8px}a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}main{max-width:1020px;margin:30px auto;padding:0 22px}article{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:28px 36px;margin-bottom:24px;scroll-margin-top:110px}h1{font-size:27px;line-height:1.4;margin-top:0}h2{font-size:20px;margin-top:30px}h3{font-size:17px}table{border-collapse:collapse;width:100%;display:block;overflow:auto;font-size:13px}th,td{border:1px solid #e5e7eb;text-align:left;padding:10px;vertical-align:top}th{background:#f9fafb}pre{padding:18px;background:#f4f6f9;border-radius:8px;overflow:auto;font-size:12px;line-height:1.7}code{font-size:.9em}li{margin-bottom:5px}.mermaid{background:#fff;overflow:auto}@media(max-width:650px){article{padding:20px}main{padding:0 12px}header{padding:12px}nav{gap:12px;font-size:13px}h1{font-size:23px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}</style></head><body><header><strong>AhaBenefits</strong> <span style="color:#8a93a0"> / Documentation</span><nav><a href="/">← Open console</a><a href="#guide">User guide</a><a href="#features">Features</a><a href="#design">System design</a><a href="#deploy">Setup & hosting</a></nav></header><main><article id="guide"><h1>AhaBenefits user guide</h1>
+<h2>Start here</h2>
+<p>The home screen combines the global shift multiplier and gift inventory. The footer identifies this as an interactive demo; changes save in the current browser. The clock, edit times and calendar limits use Asia/Ho_Chi_Minh (ICT).</p>
+<ol>
+<li>Open <strong>Add Gift</strong>, fill the required fields and create a unique <code>GIFT-...</code> SKU.</li>
+<li>Open the SKU. For voucher/service gifts, use <strong>Import Code</strong>. For physical gifts, use <strong>Adjust stock</strong>.</li>
+<li>Check inventory, status, point price, eligible cities and redemption limit.</li>
+<li>Use <strong>Simulate redemption</strong> to exercise a complete inventory/points transaction against a demo driver.</li>
+<li>Inspect <strong>Transactions</strong> and <strong>Activity Log</strong>, then export CSV or a full backup.</li>
+</ol>
+<h2>Inventory</h2>
+<p>Search by SKU, gift name or source. Global search also matches driver IDs from redemption history and shows the corresponding gifts. City selection filters gifts by eligibility and detail transactions by redemption city; the global multiplier always applies to every city.</p>
+<p>Use stock chips (All / In stock / Low stock / Out of stock / Needs review) together with advanced source, status, point-range and expiry filters. Stock is low below 100 and out at zero. Voucher/service availability counts unredeemed, unexpired codes; physical availability comes from the stock ledger. Sort SKU, expiry, available quantity or price with the table headings. Pagination is based on the filtered result count.</p>
+<p>Gift fields: unique immutable SKU, name, category, fixed gift type, source, integer point price, optional expiry, Active/Hidden/Needs review status, eligible cities and per-driver calendar-period limit. New gifts start with zero stock. No deletion action is provided: use Hidden to stop redemptions while retaining history. Adding inventory does not change visibility.</p>
+<h2>Import codes</h2>
+<p>Download the real CSV template, choose a file, drag it onto the dropzone, or expand <strong>Or paste CSV content</strong>. The header must be exactly two columns, <code>code,expiry</code> (case-insensitive). Quote fields normally; BOM and CRLF are supported.</p>
+<pre><code class="language-csv">code,expiry
+MY-CODE-001,31/12/2026
+MY-CODE-002,31/12/2026
+</code></pre>
+<p>Codes are trimmed, normalized to uppercase and must contain only letters, numbers, dots, underscores or hyphens, starting with a letter or digit. Dates must be real calendar dates in dd/mm/yyyy format. Expiry must be on or after 01/10/2026, or the current ICT date if later. Codes already present anywhere in the demo, including redeemed codes, are skipped. Repeated valid rows in a file are also skipped.</p>
+<p>Review the four validation counts. Download the rejected-row report to correct bad rows. Commit imports only valid rows and rechecks the current inventory. Import history records filename, source, counts, actor and time. Zero-valid imports cannot be committed. The browser demo accepts 2 MB / 10,000 rows per file, with 20,000 codes total; the original mockup’s 500 MB claim is replaced by a practical browser limit.</p>
+<h2>Physical gifts</h2>
+<p>Open <strong>Adjust stock</strong> from the detail screen. Positive integers receive inventory and negative integers remove it. A reason is mandatory; total inventory cannot become negative. Every adjustment is recorded in the activity log.</p>
+<h2>Multipliers and approval</h2>
+<p>Edit the global multiplier between 0.50 and 3.00 with at most two decimal places. A reason is mandatory. Values through 2.50 take effect immediately; values above 2.50 create a pending request while the old multiplier stays active.</p>
+<p>To test review, request 2.75 as <strong>nantt · Admin</strong>. Open <strong>Demo settings</strong>, select <strong>hieult · Head of Ops</strong>, and open <strong>Change history</strong>. Enter a review note and approve or reject. The requester cannot review their own request. A newer request or direct update supersedes an older pending request. Completed transactions keep their recorded point price; no history is recalculated.</p>
+<p>This demo simulates approval roles. It does not authenticate users or enforce a production security boundary.</p>
+<h2>Redemption simulator</h2>
+<p>Choose an existing demo driver in gift details and confirm <strong>Redeem for … points</strong>. The app checks Active status, nonexpired gift, eligible city, available stock, sufficient balance and the current calendar-period limit. Weeks begin Monday in ICT; month, quarter and year limits use calendar boundaries.</p>
+<p>Success consumes one code (earliest expiry first) or physical unit, deducts the recorded point price, and adds a transaction and activity record in the same saved snapshot. The confirmation shows the sample voucher code. No real voucher is issued or driver notified. A driver ID in transactions opens that driver’s history and balance when available.</p>
+<h2>Notifications and settings</h2>
+<p>The bell shows current low/out-of-stock, review, expiry and pending-approval alerts. They resolve as the underlying condition changes. The avatar opens demo actor selection, Light/Dark/System appearance, JSON backup export/restore and reset.</p>
+<p><strong>Viewer</strong> can inspect and export, but mutation controls are disabled. Actor selection resets to Admin on reload. Theme persists. Data refreshes across tabs sharing the origin. Storage is best suited to one active editor at a time; simultaneous writes in separate tabs can race.</p>
+<p>Export a backup before clearing browser data or resetting the demo. Restore validates the schema and key inventory references, then asks you to confirm replacement. Keep a backup if your browser is low on storage; failed writes show an error and do not report success.</p>
+</article><article id="features"><h1>Feature matrix</h1>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Implemented demo behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global multiplier</td>
+<td>0.50–3.00, decimal precision, required reason, preview, timestamp and audit history</td>
+</tr>
+<tr>
+<td>Approval workflow</td>
+<td>Above 2.50 stays pending; separate Head of Ops actor reviews; reject/supersede states</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>Create/edit gifts; unique fixed SKU; category/type/source/status; price/expiry; cities; limits</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td>Stock chips, global and local search, city/source/status/expiry/price filters, sorting, real pagination</td>
+</tr>
+<tr>
+<td>Codes</td>
+<td>CSV file/drop/paste, template, preview, strict date validation, global deduplication, rejected-row CSV</td>
+</tr>
+<tr>
+<td>Import commit</td>
+<td>Valid rows only; current-state revalidation; codes stored; batches and SKU activity recorded</td>
+</tr>
+<tr>
+<td>Physical gifts</td>
+<td>Signed stock adjustments, reason and nonnegative inventory checks</td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td>Demo redemption, stock/points deduction, calendar limits, transaction history, driver profiles, CSV export</td>
+</tr>
+<tr>
+<td>Detail records</td>
+<td>Accurate SKU-specific data and audit trail; no fallback invented transactions</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>Derived stock, expiry, review and approval alerts with navigation</td>
+</tr>
+<tr>
+<td>Persistence</td>
+<td>Versioned local storage, reload persistence, cross-tab updates, JSON backup/restore and reset</td>
+</tr>
+<tr>
+<td>Usability</td>
+<td>Responsive layout, keyboard-operable native dialogs, labeled forms, empty/error states, dark mode, ICT times</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>Hosted guide, operating instructions, architecture, feature matrix, deploy instructions, QA evidence</td>
+</tr>
+</tbody></table>
+<h2>Not connected to production</h2>
+<p>The live URL is a functional demo, not a secure internal admin system. Real authentication/SSO, server-enforced roles, shared database, encrypted voucher vault, distributed transaction locks, merchant ingestion, order-point events, physical fulfillment, actual notifications and production monitoring are not implemented. The architecture document specifies those boundaries and an implementation path. No backend account, API key, database or identity provider was supplied.</p>
+<p>There is no undo/reversal for a completed demo redemption; restore a backup or reset the demo. There are no pending reservations or delivery states in the demo, so the original fabricated “Reserved / pending” count was removed.</p>
+</article><article id="design"><h1>AhaBenefits system design</h1>
+<h2>Implemented architecture</h2>
+<pre><code class="language-mermaid">flowchart LR
+    Browser[Browser] --&gt; CDN[Vercel static hosting]
+    CDN --&gt; UI[React feature components]
+    UI --&gt; Rules[Typed domain transitions + Zod validation]
+    Rules --&gt; Store[Versioned localStorage snapshot]
+    Store --&gt; UI
+    CSV[CSV file or pasted content] --&gt; Parser[CSV parser and row validation]
+    Parser --&gt; Rules
+    Store --&gt; Backup[JSON backup / CSV export]
+</code></pre>
+<p>React + Vite renders the supplied admin design. Feature modules own their forms and UI state; reusable primitives own dialogs, fields, status pills and pagination. The domain layer performs validation and returns a new state without mutating its input. A commit reads the latest stored snapshot, runs the transition, writes it, then updates React. A failed storage write leaves the visible state unchanged and reports an error. Cross-tab storage events refresh other open copies.</p>
+<p>This is a browser application, with no server API or credentials. localStorage is origin-scoped, user-editable and neither an authentication boundary nor an audit-grade store. Multiple simultaneous tab commits can overwrite one another. Each device/origin is independent. Data survives reloads but not browser storage deletion. Code imports are bounded to 2 MB / 10,000 rows and 20,000 codes total to keep browser storage and rendering manageable.</p>
+<h2>Current entities</h2>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Key and essential fields</th>
+<th>Relationships</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gift</td>
+<td>SKU, name, category, type, source, price, expiry, status, eligible cities, limit/period, physical stock</td>
+<td>One-to-many codes, transactions, activities, batches</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>Canonical code, SKU, expiry, available/redeemed, batch ID</td>
+<td>Belongs to gift and import batch</td>
+</tr>
+<tr>
+<td>Driver</td>
+<td>Driver ID, city, remaining points</td>
+<td>One-to-many transactions</td>
+</tr>
+<tr>
+<td>Transaction</td>
+<td>ID, SKU, driver, timestamp, city, immutable point price, optional sample code</td>
+<td>Gift and driver</td>
+</tr>
+<tr>
+<td>Import batch</td>
+<td>ID, SKU, source, filename, validation counts, actor, time</td>
+<td>Imported codes</td>
+</tr>
+<tr>
+<td>Activity</td>
+<td>ID, SKU, action, detail, actor, time</td>
+<td>Gift</td>
+</tr>
+<tr>
+<td>Multiplier</td>
+<td>Current value, actor, timestamp</td>
+<td>History and approval requests</td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>Request ID, proposed/previous values, reason, requester, status, reviewer/note/time</td>
+<td>Multiplier history</td>
+</tr>
+</tbody></table>
+<p>Dates are ISO strings internally, with ICT display and calendar-period calculations. The initial data comes from the reference HTML, but actual sample codes are generated to match inventory counts. Only explicit historical transactions from the fuel gift are retained; other SKUs do not inherit unrelated mock data.</p>
+<h2>Business invariants</h2>
+<ul>
+<li>SKU uniqueness, code uniqueness across gifts and batches, integer prices/stock, strict dates and at least one eligible city.</li>
+<li>Codes stay in the inventory after redemption, preventing reimport and reuse. Expired codes are excluded from availability.</li>
+<li>Imports preserve gift visibility and create inventory/batch/activity data in one snapshot.</li>
+<li>Multipliers above 2.50 remain pending until independent review. A newer multiplier change supersedes older pending work.</li>
+<li>Redemption validates availability and eligibility before changing balances. The price at redemption is stored permanently.</li>
+<li>Gifts are hidden rather than deleted, preserving references and history.</li>
+<li>Exports neutralize spreadsheet formula prefixes. React renders untrusted text as text rather than HTML.</li>
+</ul>
+<h2>Proposed shared production architecture — not deployed</h2>
+<pre><code class="language-mermaid">flowchart TD
+    Admin[Admin browser] --&gt; SSO[Company OIDC / SSO]
+    Admin --&gt; API[Vercel API functions]
+    API --&gt; Auth[Session + RBAC + city scope]
+    Auth --&gt; Service[Benefits domain service]
+    Service --&gt; DB[(PostgreSQL)]
+    Service --&gt; Vault[Encrypted voucher storage]
+    Service --&gt; Queue[Import and fulfillment queue]
+    Queue --&gt; Worker[Chunked validation / merchant worker]
+    Worker --&gt; DB
+    Worker --&gt; Files[Private CSV object storage]
+    Orders[Completed-order events] --&gt; Events[Idempotent point accrual consumer]
+    Events --&gt; DB
+    DB --&gt; Outbox[Transactional outbox]
+    Outbox --&gt; Notify[Driver / operator notifications]
+</code></pre>
+<p>Use company identity and server-side sessions. Resolve roles and city grants on the server for every request. Roles: Viewer for reads, Admin for catalog/import/config changes, Head of Ops for independent high-multiplier approval. Approval requesters must never review their own requests. Store secrets and merchant keys only on the server; imported redeemable codes require private encrypted storage and restricted disclosure.</p>
+<h3>Suggested API contracts</h3>
+<table>
+<thead>
+<tr>
+<th>Method / route</th>
+<th>Purpose and guarantees</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET /api/gifts</td>
+<td>Filter, city-scope, sort, cursor paginate and return inventory counts</td>
+</tr>
+<tr>
+<td>POST /api/gifts</td>
+<td>Create validated unique SKU; audit actor from session</td>
+</tr>
+<tr>
+<td>PATCH /api/gifts/:sku</td>
+<td>Edit allowed fields using version/If-Match for concurrent updates</td>
+</tr>
+<tr>
+<td>POST /api/gifts/:sku/stock-adjustments</td>
+<td>Append stock movement with reason and idempotency key</td>
+</tr>
+<tr>
+<td>POST /api/imports</td>
+<td>Create signed private upload session and import job</td>
+</tr>
+<tr>
+<td>GET /api/imports/:id</td>
+<td>Progress, counts, preview, rejected-row report</td>
+</tr>
+<tr>
+<td>POST /api/imports/:id/commit</td>
+<td>Commit validated staged codes under unique constraints</td>
+</tr>
+<tr>
+<td>GET /api/gifts/:sku/transactions</td>
+<td>Cursor-paginated transaction ledger and export job</td>
+</tr>
+<tr>
+<td>POST /api/redemptions</td>
+<td>Authenticated eligible driver, idempotency key, atomic stock/points transaction</td>
+</tr>
+<tr>
+<td>POST /api/multiplier-requests</td>
+<td>Validate proposal and create approval or direct effective event</td>
+</tr>
+<tr>
+<td>POST /api/multiplier-requests/:id/review</td>
+<td>Independent authorized review with optimistic version check</td>
+</tr>
+<tr>
+<td>GET /api/audit-events</td>
+<td>Append-only audit query, permission and city scoped</td>
+</tr>
+</tbody></table>
+<h3>PostgreSQL model</h3>
+<p>Use <code>gifts</code>, <code>gift_cities</code>, <code>voucher_codes</code>, <code>stock_movements</code>, <code>drivers</code>, <code>point_ledger</code>, <code>redemptions</code>, <code>import_batches</code>, <code>import_rows</code>, <code>multiplier_versions</code>, <code>multiplier_requests</code>, <code>audit_events</code> and <code>outbox_events</code> tables. Unique constraints on SKU, normalized code digest and idempotency keys prevent duplicate entities/actions. Foreign keys link records; CHECK constraints enforce nonnegative inventory and valid numeric bounds. Index gifts on searchable keys/status, codes on <code>(gift_id, status, expires_at)</code>, redemptions on <code>(driver_id, gift_id, created_at DESC)</code>, audit on <code>(entity_id, created_at DESC)</code>.</p>
+<h3>Redemption transaction</h3>
+<ol>
+<li>Authenticate the driver; use server time and trusted city assignment.</li>
+<li>Check idempotency key and return an existing result when retried.</li>
+<li>Lock the driver balance and a driver/gift/period counter in consistent order. Validate balance and calendar limit under the locks.</li>
+<li>Revalidate gift status, eligibility, price and expiry. Lock an available code with earliest expiry (<code>FOR UPDATE SKIP LOCKED</code>) or decrement physical stock conditionally.</li>
+<li>Insert redemption, debit the append-only point ledger, update balance/limit counters, mark code consumed and append audit/outbox records in one database transaction.</li>
+<li>Commit before delivering the voucher or invoking merchants. Process delivery from the outbox with retry and deduplication. Failed delivery must not produce a second debit; compensations require an explicit reversal entry.</li>
+</ol>
+<h3>Imports and accrual</h3>
+<p>Production 500 MB uploads require direct private object uploads, background streaming parsing, staged rows, chunk progress and restartable jobs. Do not load a 500 MB file into an API request or the browser demo parser. Commit must enforce code uniqueness in the database even when preview looked valid.</p>
+<p>Completed-order events use the multiplier effective at order completion, integer point arithmetic with a documented rounding policy, an order/event idempotency key and immutable ledger entries. Clarify late-arriving events and corrections with operations before enabling real accrual.</p>
+<h3>Rollout and decisions still required</h3>
+<p>Choose company identity/SSO, database region and data retention, approver group, merchant/code-vault integration, global-vs-city stock allocation, point accrual rounding, cancellation/refund handling, physical fulfillment and import scale. Create a staging environment, migrate the schema, integrate identity, run concurrency/security tests and a limited pilot before real driver traffic.</p>
+<p>Production observability should track import rejection/failure rates, stock depletion, redemption latency, double-spend conflicts, balance reconciliation, approval age and delivery retries. Use structured request IDs, append-only audit records, alerting and tested database restores.</p>
+</article><article id="deploy"><h1>Setup and deployment</h1>
+<h2>Local development</h2>
+<p>Use Node 22.12+ or Node 24 and npm. In this folder, run <code>npm ci</code>, then <code>npm run dev</code>. Open the address Vite prints. <code>npm test</code> runs business-rule tests; <code>npm run build</code> runs TypeScript checking, generates the hosted guide and produces <code>dist/</code>. <code>npm run preview</code> serves that production build locally.</p>
+<h2>Vercel</h2>
+<p>This app is deployed as a static Vite site, with no server environment variables. The connected Vercel plugin can publish the contents of <code>dist/</code>. The local CLI credential was invalid during initial setup, so the connector is the deployment path for this delivery.</p>
+<p>For future CLI deployments, sign in to Vercel, link a dedicated project from this folder, then run:</p>
+<pre><code class="language-sh">npm ci
+npm test
+npm run build
+npx vercel deploy
+</code></pre>
+<p>Test the preview, then promote it or deploy with <code>npx vercel deploy --prod</code>. The included <code>vercel.json</code> declares the Vite framework, build command, <code>dist</code> output and baseline response headers. The app uses hash routes for gift details, so detail links also work on simple static hosting.</p>
+<p>A Git-connected Vercel project can build on pushes once you put this folder in your own repository. No repository or CI connection was created by this task. Avoid uploading the source reference, backups, or real voucher CSVs into public static assets.</p>
+<h2>Operational boundaries</h2>
+<p>The live demo has no database or server functions to monitor. Vercel serves the built application and documentation; business state stays in each browser. Google Fonts loads the reference font, with system fallbacks. The hosted system diagram uses Mermaid from jsDelivr; the local Markdown document retains the diagram source.</p>
+<p>Use a separate protected staging deployment for future real authentication and database work. Do not enter real redeemable codes or driver information into this public browser demo.</p>
+<p>Official references: <a href="https://vite.dev/guide/">Vite getting started</a> and <a href="https://vercel.com/docs/frameworks/frontend/vite">Vite on Vercel</a>.</p>
+</article></main><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';document.querySelectorAll('code.language-mermaid').forEach(code=>{const div=document.createElement('div');div.className='mermaid';div.textContent=code.textContent;code.parentElement.replaceWith(div);});mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script></body></html>

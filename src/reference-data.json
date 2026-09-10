@@ -1,0 +1,232 @@
+{
+  "GIFTS": [
+    {
+      "sku": "GIFT-FUEL-50",
+      "name": "Fuel voucher 50,000d",
+      "cat": "Fuel",
+      "type": "Voucher code",
+      "exp": "31/12/2026",
+      "qty": 1182,
+      "price": 800,
+      "src": "In-house",
+      "by": "nantt",
+      "at": "04/09/2026 16:42",
+      "status": "active",
+      "uom": "code",
+      "limit": "2 per driver / week"
+    },
+    {
+      "sku": "GIFT-PHONE-20",
+      "name": "Mobile top-up 20,000d",
+      "cat": "Telco",
+      "type": "Voucher code",
+      "exp": "31/12/2026",
+      "qty": 2755,
+      "price": 600,
+      "src": "Aggregator",
+      "by": "hieult",
+      "at": "01/09/2026 09:15",
+      "status": "active",
+      "uom": "code",
+      "limit": "4 per driver / week"
+    },
+    {
+      "sku": "GIFT-TIRE-SVC",
+      "name": "Free tyre repair (1 use)",
+      "cat": "Vehicle",
+      "type": "Service",
+      "exp": "30/09/2026",
+      "qty": 96,
+      "price": 350,
+      "src": "Merchant pool",
+      "by": "nantt",
+      "at": "28/08/2026 11:03",
+      "status": "active",
+      "uom": "voucher",
+      "limit": "1 per driver / month"
+    },
+    {
+      "sku": "GIFT-RAIN-KIT",
+      "name": "Ahamove raincoat",
+      "cat": "Gear",
+      "type": "Physical",
+      "exp": "—",
+      "qty": 0,
+      "price": 1500,
+      "src": "In-house",
+      "by": "trangnt",
+      "at": "20/08/2026 10:30",
+      "status": "inactive",
+      "uom": "unit",
+      "limit": "1 per driver / quarter"
+    },
+    {
+      "sku": "GIFT-COFFEE-1",
+      "name": "Highlands coffee, size M",
+      "cat": "Food",
+      "type": "Voucher code",
+      "exp": "31/10/2026",
+      "qty": 412,
+      "price": 450,
+      "src": "Merchant pool",
+      "by": "hieult",
+      "at": "02/09/2026 14:11",
+      "status": "active",
+      "uom": "code",
+      "limit": "3 per driver / week"
+    },
+    {
+      "sku": "GIFT-OIL-CHG",
+      "name": "Motorbike oil change",
+      "cat": "Vehicle",
+      "type": "Service",
+      "exp": "15/12/2026",
+      "qty": 38,
+      "price": 2200,
+      "src": "Merchant pool",
+      "by": "nantt",
+      "at": "03/09/2026 08:20",
+      "status": "active",
+      "uom": "voucher",
+      "limit": "1 per driver / month"
+    },
+    {
+      "sku": "GIFT-HELMET-1",
+      "name": "Three-quarter helmet",
+      "cat": "Gear",
+      "type": "Physical",
+      "exp": "—",
+      "qty": 150,
+      "price": 3500,
+      "src": "In-house",
+      "by": "trangnt",
+      "at": "15/08/2026 09:00",
+      "status": "error",
+      "uom": "unit",
+      "limit": "1 per driver / year"
+    },
+    {
+      "sku": "GIFT-DATA-5GB",
+      "name": "5GB data, 30 days",
+      "cat": "Telco",
+      "type": "Voucher code",
+      "exp": "31/12/2026",
+      "qty": 0,
+      "price": 900,
+      "src": "Aggregator",
+      "by": "hieult",
+      "at": "05/09/2026 17:25",
+      "status": "active",
+      "uom": "code",
+      "limit": "2 per driver / month"
+    }
+  ],
+  "TXN": {
+    "GIFT-FUEL-50": [
+      {
+        "d": "05/09/2026 14:02",
+        "who": "DRV-448120",
+        "city": "Ho Chi Minh City",
+        "pts": 800
+      },
+      {
+        "d": "05/09/2026 09:41",
+        "who": "DRV-107765",
+        "city": "Ho Chi Minh City",
+        "pts": 800
+      },
+      {
+        "d": "03/09/2026 20:18",
+        "who": "DRV-512337",
+        "city": "Da Nang",
+        "pts": 800
+      },
+      {
+        "d": "02/09/2026 07:52",
+        "who": "DRV-448120",
+        "city": "Ho Chi Minh City",
+        "pts": 750
+      },
+      {
+        "d": "01/09/2026 08:05",
+        "who": "DRV-330984",
+        "city": "Hanoi",
+        "pts": 750
+      }
+    ],
+    "_default": [
+      {
+        "d": "04/09/2026 12:10",
+        "who": "DRV-221004",
+        "city": "Da Nang",
+        "pts": 600
+      },
+      {
+        "d": "03/09/2026 18:44",
+        "who": "DRV-108992",
+        "city": "Hanoi",
+        "pts": 600
+      },
+      {
+        "d": "02/09/2026 10:33",
+        "who": "DRV-447015",
+        "city": "Ho Chi Minh City",
+        "pts": 600
+      }
+    ]
+  },
+  "ACT": {
+    "GIFT-FUEL-50": [
+      {
+        "d": "04/09/2026 16:42",
+        "by": "nantt",
+        "what": "Imported 1,200 codes",
+        "det": "Source: In-house &middot; 18 duplicates skipped"
+      },
+      {
+        "d": "02/09/2026 09:14",
+        "by": "nantt",
+        "what": "Point price changed",
+        "det": "750 &rarr; 800 points"
+      },
+      {
+        "d": "28/08/2026 11:03",
+        "by": "trangnt",
+        "what": "Redemption limit changed",
+        "det": "1 &rarr; 2 per driver / week"
+      },
+      {
+        "d": "12/08/2026 14:20",
+        "by": "hieult",
+        "what": "Status changed",
+        "det": "Hidden &rarr; Active"
+      },
+      {
+        "d": "02/08/2026 08:00",
+        "by": "hieult",
+        "what": "SKU created",
+        "det": "Category: Fuel &middot; Type: Voucher code"
+      }
+    ],
+    "_default": [
+      {
+        "d": "05/09/2026 17:25",
+        "by": "hieult",
+        "what": "Imported a code batch",
+        "det": "Source: Aggregator"
+      },
+      {
+        "d": "20/08/2026 10:30",
+        "by": "trangnt",
+        "what": "Point price changed",
+        "det": "1,400 &rarr; 1,500 points"
+      },
+      {
+        "d": "01/08/2026 09:00",
+        "by": "nantt",
+        "what": "SKU created",
+        "det": "Created from the gift catalog"
+      }
+    ]
+  }
+}
